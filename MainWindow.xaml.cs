@@ -14,6 +14,8 @@ using System.Diagnostics;
 using AutoRenewal.Util;
 using System.Text.RegularExpressions;
 using System;
+using Serilog;
+using System.Text;
 
 namespace AutoRenewal
 {
@@ -79,9 +81,15 @@ namespace AutoRenewal
         {
             InitializeComponent();
             DataContext = this;
-#if DEBUG
-            InputPath = @"C:\Users\Dennis\Google Drive\temp\EDAnalysis_Template.xlsx";
-#endif
+
+            Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, "logs"));
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .WriteTo.File(Path.Combine("logs", "log.log"), rollOnFileSizeLimit: true)
+                .CreateLogger();
+
+            Log.Information("App Startup");
 
             OutputDirectory = Path.Combine(AppContext.BaseDirectory, "ED Analysis");
             Directory.CreateDirectory(OutputDirectory);
@@ -111,68 +119,117 @@ namespace AutoRenewal
 
         private void StartBtnClick(object sender, RoutedEventArgs e)
         {
-            IWorkbook ExcelDoc = null;
-            XWPFDocument WordDoc = null;
-            var orgHelper = new OrgHelper(SelectedOrganization);
-            var outputFileName = Path.GetFileNameWithoutExtension(InputPath);
-
             try
             {
-                using (FileStream file = new FileStream(InputPath, FileMode.Open, FileAccess.Read))
-                {
-                    ExcelDoc = WorkbookFactory.Create(file);
-                }
-                string templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", SelectedOrganization.TemplateFileName);
-                using (FileStream file = new FileStream(templatePath, FileMode.Open, FileAccess.ReadWrite))
-                {
-                    WordDoc = new XWPFDocument(file);
-                }
-            }
-            catch(FileNotFoundException ex)
-            {
-                MessageBox.Show(ex.Message);
-                return;
-            }
+                IWorkbook ExcelDoc = null;
+                XWPFDocument WordDoc = null;
+                var orgHelper = new OrgHelper(SelectedOrganization);
+                var outputFileName = Path.GetFileNameWithoutExtension(InputPath);
 
-            ProgressText = "In Progress";
-
-            for (int i = 0; i < WordDoc.BodyElements.Count; i++)
-            {
-                var element = WordDoc.BodyElements[i];
-                if (element.ElementType == BodyElementType.PARAGRAPH)
+                try
                 {
-                    var paragraph = (XWPFParagraph)element;
-                    if (paragraph.Text.Length > 0 && paragraph.Text[0] == '[') // only proceed if paragraph starts with '[', i.e. [Part 1]
+                    using (FileStream file = new FileStream(InputPath, FileMode.Open, FileAccess.Read))
                     {
-                        // for each paragraph element, check if it has a mapping for the selected organization
-                        var split = Regex.Split(paragraph.Text, @"(?<=[]])")[0];  //@"(?<=[.,;])"
-                        var mapList = orgHelper.HasMapping(split);
-                        if (mapList.Count > 0)
+                        ExcelDoc = WorkbookFactory.Create(file);
+                    }
+                    string templatePath = Path.Combine(AppContext.BaseDirectory, "Templates", SelectedOrganization.TemplateFileName);
+                    using (FileStream file = new FileStream(templatePath, FileMode.Open, FileAccess.ReadWrite))
+                    {
+                        WordDoc = new XWPFDocument(file);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex.ToString());
+                    ProgressText = "Unable to open input or output file";
+                    MessageBox.Show(ex.Message);
+                    return;
+                }
+
+                ProgressText = "In Progress";
+                StringBuilder statusString = new StringBuilder();
+
+                for (int i = 0; i < WordDoc.BodyElements.Count; i++)
+                {
+                    var element = WordDoc.BodyElements[i];
+                    if (element.ElementType == BodyElementType.PARAGRAPH)
+                    {
+                        var paragraph = (XWPFParagraph)element;
+                        if (paragraph.Text.Length > 0 && paragraph.Text[0] == '[') // only proceed if paragraph starts with '[', i.e. [Part 1]
                         {
-                            var para = (XWPFParagraph)WordDoc.BodyElements[i + 1];
-                            var run = para.CreateRun();
+                            // for each paragraph element, check if it has a mapping for the selected organization
+                            var split = Regex.Split(paragraph.Text, @"(?<=[]])")[0];  //@"(?<=[.,;])"
+                            var mapList = orgHelper.HasMapping(split);
+                            if (mapList.Count > 0)
+                            {
+                                // fow now, i'm only considering the first map (fine for PS1 orgs)
+                                var map = mapList[0];
 
-                            // fow now, i'm only considering the first map (fine for PS1 orgs)
-                            var map = mapList[0];
-                            ISheet sheet = ExcelDoc.GetSheet(map.SheetName);
-                            var rowVal = OrgHelper.GetRowValue(map.ExcelCell);
-                            var colVal = OrgHelper.GetColumnValue(map.ExcelCell);
-                            string contents = sheet.GetRow(rowVal).GetCell(colVal).StringCellValue;
+                                var para = (XWPFParagraph)WordDoc.BodyElements[i + 1];
+                                if(para.Text != string.Empty)
+                                {
+                                    statusString.AppendLine($"Unable to paste {map.ExcelCell} into {map.WordDesignator}. No empty line to paste into.");
+                                    continue;
+                                }
 
-                            run.SetText(contents);
+                                try
+                                {
+                                    ISheet sheet = ExcelDoc.GetSheet(map.SheetName);
+                                    var rowVal = OrgHelper.GetRowValue(map.ExcelCell);
+                                    var colVal = OrgHelper.GetColumnValue(map.ExcelCell);
+                                    string contents = string.Empty;
+                                    switch(sheet.GetRow(rowVal).GetCell(colVal).CellType)
+                                    {
+                                        case CellType.Blank:
+                                            Log.Information($"blank cell found {map.ExcelCell}");
+                                            continue;
+                                        case CellType.Numeric:
+                                            contents = sheet.GetRow(rowVal).GetCell(colVal).NumericCellValue.ToString();
+                                            break;
+                                        case CellType.String:
+                                            contents = sheet.GetRow(rowVal).GetCell(colVal).StringCellValue;
+                                            if (contents.Length < 7 && contents.Contains("N/A")) continue;
+                                            break;
+                                        case CellType.Unknown:
+                                            statusString.AppendLine($"Badly formatted cell {map.SheetName} : {map.ExcelCell}");
+                                            continue;
+                                    }
+
+                                    var run = para.CreateRun();
+                                    run.SetText(contents);
+                                }
+                                catch(Exception ex)
+                                {
+                                    Log.Error(ex.ToString());
+                                    statusString.AppendLine($"Unable to find {map.SheetName} : {map.ExcelCell}");
+                                    continue;
+                                }
+                            }
                         }
                     }
                 }
-            }           
 
-            FileStream sw = new FileStream(Path.Combine(OutputDirectory, $"{outputFileName}.docx"), FileMode.Create);
-            WordDoc.Write(sw);
-            sw.Close();
+                FileStream sw = new FileStream(Path.Combine(OutputDirectory, $"{outputFileName}.docx"), FileMode.Create);
+                WordDoc.Write(sw);
+                sw.Close();
 
-            ExcelDoc.Close();
-            WordDoc.Close();
+                ExcelDoc.Close();
+                WordDoc.Close();
 
-            ProgressText = "Completed Successfully";
+                if (statusString.ToString() == string.Empty)
+                    ProgressText = "Completed Successfully";
+                else
+                {
+                    statusString.AppendLine("Completed Successfully");
+                    ProgressText = statusString.ToString();
+                }
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex.ToString());
+                ProgressText = "Error occurred";
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private string OpenFileBrowser(string defaultExt, string filter)

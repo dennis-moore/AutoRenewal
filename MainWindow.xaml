@@ -42,7 +42,7 @@
             />
             <StackPanel x:Name="progressStack" Orientation="Horizontal" Margin="5,5,5,0" HorizontalAlignment="Stretch"
                         Visibility="{Binding ProgressText, Converter={StaticResource visibilityConverter}}">
-                <TextBlock x:Name="progressTxt" Text="{Binding ProgressText}" FontSize="12" />
+                <TextBlock x:Name="progressTxt" Text="{Binding ProgressText}" FontSize="12" TextWrapping="Wrap"/>
                 <fa:ImageAwesome x:Name="progressSpinner" Icon="Spinner" Spin="True" Width="50" Height="50" HorizontalAlignment="Right"
                                  Visibility="{Binding ProgressText, Converter={StaticResource progressConverter}}"/>
             </StackPanel>

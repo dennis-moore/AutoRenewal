@@ -5,16 +5,32 @@ VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoRenewal", "AutoRenewal.csproj", "{9114E48D-DD98-46B1-B4B9-892D3577842C}"
 EndProject
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{240B1937-A996-48AF-ABBE-A0309018344C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9114E48D-DD98-46B1-B4B9-892D3577842C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9114E48D-DD98-46B1-B4B9-892D3577842C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9114E48D-DD98-46B1-B4B9-892D3577842C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9114E48D-DD98-46B1-B4B9-892D3577842C}.Debug|x86.Build.0 = Debug|Any CPU
 		{9114E48D-DD98-46B1-B4B9-892D3577842C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9114E48D-DD98-46B1-B4B9-892D3577842C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9114E48D-DD98-46B1-B4B9-892D3577842C}.Release|x86.ActiveCfg = Release|Any CPU
+		{9114E48D-DD98-46B1-B4B9-892D3577842C}.Release|x86.Build.0 = Release|Any CPU
+		{240B1937-A996-48AF-ABBE-A0309018344C}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{240B1937-A996-48AF-ABBE-A0309018344C}.Debug|Any CPU.Build.0 = Debug|x86
+		{240B1937-A996-48AF-ABBE-A0309018344C}.Debug|x86.ActiveCfg = Debug|x86
+		{240B1937-A996-48AF-ABBE-A0309018344C}.Debug|x86.Build.0 = Debug|x86
+		{240B1937-A996-48AF-ABBE-A0309018344C}.Release|Any CPU.ActiveCfg = Release|x86
+		{240B1937-A996-48AF-ABBE-A0309018344C}.Release|Any CPU.Build.0 = Release|x86
+		{240B1937-A996-48AF-ABBE-A0309018344C}.Release|x86.ActiveCfg = Release|x86
+		{240B1937-A996-48AF-ABBE-A0309018344C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

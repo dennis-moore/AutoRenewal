@@ -1,0 +1,56 @@
+{
+  "Name": "PS1",
+  "TemplateFileName": "PS1_Analysis.docx",
+  "Mappings": [
+    {
+      "SheetName": "501(c)(3)",
+      "ExcelCell": "F4",
+      "WordDesignator": "[PART 1]"
+    },
+	{
+      "SheetName": "501(c)(3)",
+      "ExcelCell": "F6",
+      "WordDesignator": "[PART 4]"
+    },
+	{
+      "SheetName": "501(c)(3)",
+      "ExcelCell": "F7",
+      "WordDesignator": "[PART 5]"
+    },
+	{
+      "SheetName": "501(c)(3)",
+      "ExcelCell": "F8",
+      "WordDesignator": "[PART 2]"
+    },
+	{
+      "SheetName": "501(c)(3)",
+      "ExcelCell": "F9",
+      "WordDesignator": "[PART 6]"
+    },
+	{
+      "SheetName": "501(c)(3)",
+      "ExcelCell": "F10",
+      "WordDesignator": "[PART 8]"
+    },
+	{
+      "SheetName": "PS1",
+      "ExcelCell": "E4",
+      "WordDesignator": "[PART 9]"
+    },
+	{
+      "SheetName": "PS1",
+      "ExcelCell": "E5",
+      "WordDesignator": "[PART 10]"
+    },
+	{
+      "SheetName": "PS1",
+      "ExcelCell": "E7",
+      "WordDesignator": "[PART 11]"
+    },
+	{
+      "SheetName": "PS1",
+      "ExcelCell": "E10",
+      "WordDesignator": "[PART 15]"
+    }
+  ]
+}

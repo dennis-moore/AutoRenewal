@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <?define AutoRenewal_TargetDir=$(var.AutoRenewal.TargetDir)?>
+  <?define AutoRenewal_LibDir=$(var.AutoRenewal.TargetDir)/lib/?>
+	<Product Id="d7b0a9cd-ca44-41cd-aa79-5be183b30e93" Name="AutoRenewal" Language="1033" Version="1.0.0.0" Manufacturer="WiXInstaller" UpgradeCode="eaa5e8a2-32c0-4f1c-8126-53effa1354bf">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="Installer" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id="AutoRenewal.exe" Guid="0aed914c-15a0-42c1-af80-171307051024">
+        <File Id="AutoRenewal.exe" Name="AutoRenewal.exe" Source="$(var.AutoRenewal_TargetDir)AutoRenewal.exe" />
+      </Component>
+      <Component Id="System.ValueTuple.dll" Guid="9d9b8015-1e9c-45a9-b57f-1123f68f4f9f">
+        <File Id="System.ValueTuple.dll" Name="System.ValueTuple.dll" Source="$(var.AutoRenewal_LibDir)System.ValueTuple.dll" />
+      </Component>
+      <Component Id="System.Buffers.dll" Guid="7c0caf70-f890-4200-9f9a-84d9be3d5cac">
+        <File Id="System.Buffers.dll" Name="System.Buffers.dll" Source="$(var.AutoRenewal_LibDir)System.Buffers.dll" />
+      </Component>
+      <Component Id="System.Numerics.Vectors.dll" Guid="42c6a83f-9e3c-4de5-aae3-b1fbbed48daa">
+        <File Id="System.Numerics.Vectors.dll" Name="System.Numerics.Vectors.dll" Source="$(var.AutoRenewal_LibDir)System.Numerics.Vectors.dll" />
+      </Component>
+      <Component Id="System.Memory.dll" Guid="37cc4f4c-ec18-4df2-bf94-7930efd4dd4d">
+        <File Id="System.Memory.dll" Name="System.Memory.dll" Source="$(var.AutoRenewal_LibDir)System.Memory.dll" />
+      </Component>
+      <Component Id="System.Runtime.CompilerServices.Unsafe.dll" Guid="c3ef5bfa-6cff-47ed-8014-85eb54656bf8">
+        <File Id="System.Runtime.CompilerServices.Unsafe.dll" Name="System.Runtime.CompilerServices.Unsafe.dll" Source="$(var.AutoRenewal_LibDir)System.Runtime.CompilerServices.Unsafe.dll" />
+      </Component>
+      <Component Id="NPOI.OpenXml4Net.dll" Guid="5db02001-688e-4af2-bc11-0eb5df11e582">
+        <File Id="NPOI.OpenXml4Net.dll" Name="NPOI.OpenXml4Net.dll" Source="$(var.AutoRenewal_LibDir)NPOI.OpenXml4Net.dll" />
+      </Component>
+      <Component Id="NPOI.OpenXmlFormats.dll" Guid="b82ac043-57c8-4e61-b0bb-41443a2e6cbb">
+        <File Id="NPOI.OpenXmlFormats.dll" Name="NPOI.OpenXmlFormats.dll" Source="$(var.AutoRenewal_LibDir)NPOI.OpenXmlFormats.dll" />
+      </Component>
+      <Component Id="ICSharpCode.SharpZipLib.dll" Guid="789dd359-266f-467f-9c0b-f1cb7dce65a3">
+        <File Id="ICSharpCode.SharpZipLib.dll" Name="ICSharpCode.SharpZipLib.dll" Source="$(var.AutoRenewal_LibDir)ICSharpCode.SharpZipLib.dll" />
+      </Component>
+      <Component Id="BouncyCastle.Crypto.dll" Guid="e357d574-2fd5-4709-8be1-69bab7305472">
+        <File Id="BouncyCastle.Crypto.dll" Name="BouncyCastle.Crypto.dll" Source="$(var.AutoRenewal_LibDir)BouncyCastle.Crypto.dll" />
+      </Component>
+      <Component Id="System.Text.Json.dll" Guid="720ebaa1-25e1-4dab-8e44-1de8bb361163">
+        <File Id="System.Text.Json.dll" Name="System.Text.Json.dll" Source="$(var.AutoRenewal_LibDir)System.Text.Json.dll" />
+      </Component>
+      <Component Id="System.Threading.Tasks.Extensions.dll" Guid="3b0a7361-1f7b-40cf-bd07-a2010340f456">
+        <File Id="System.Threading.Tasks.Extensions.dll" Name="System.Threading.Tasks.Extensions.dll" Source="$(var.AutoRenewal_LibDir)System.Threading.Tasks.Extensions.dll" />
+      </Component>
+      <Component Id="NPOI.OOXML.dll" Guid="40646f89-7c6b-4262-aa22-4e5b3256e9bf">
+        <File Id="NPOI.OOXML.dll" Name="NPOI.OOXML.dll" Source="$(var.AutoRenewal_LibDir)NPOI.OOXML.dll" />
+      </Component>
+      <Component Id="NPOI.dll" Guid="0a2e490c-e6d2-4ae7-9270-4cf4f39cd0f4">
+        <File Id="NPOI.dll" Name="NPOI.dll" Source="$(var.AutoRenewal_LibDir)NPOI.dll" />
+      </Component>
+      <Component Id="FontAwesome.WPF.dll" Guid="a427cc1a-2c0e-4fe7-984d-3e8385795543">
+        <File Id="FontAwesome.WPF.dll" Name="FontAwesome.WPF.dll" Source="$(var.AutoRenewal_LibDir)FontAwesome.WPF.dll" />
+      </Component>
+      <Component Id="AutoRenewal.exe.config" Guid="8ebdef81-dfaa-43c3-b42b-7c067c4e2173">
+        <File Id="AutoRenewal.exe.config" Name="AutoRenewal.exe.config" Source="$(var.AutoRenewal_TargetDir)AutoRenewal.exe.config" />
+      </Component>
+      <Component Id="System.Text.Encodings.Web.dll" Guid="5d80751f-00e7-4900-956b-ca3b200f6f7e">
+        <File Id="System.Text.Encodings.Web.dll" Name="System.Text.Encodings.Web.dll" Source="$(var.AutoRenewal_LibDir)System.Text.Encodings.Web.dll" />
+      </Component>
+      <Component Id="Microsoft.Bcl.AsyncInterfaces.dll" Guid="e118fedb-9f93-4b96-a896-fd04d6b6ae5c">
+        <File Id="Microsoft.Bcl.AsyncInterfaces.dll" Name="Microsoft.Bcl.AsyncInterfaces.dll" Source="$(var.AutoRenewal_LibDir)Microsoft.Bcl.AsyncInterfaces.dll" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="AutoRenewal">
+          <Directory Id="templates" Name="Templates">
+            <Component Id="templates" Guid="e86573f3-c59d-48b5-90a4-3c75e433bfb2" SharedDllRefCount="no" KeyPath="no" NeverOverwrite="no" Permanent="no" Transitive="no" Win64="no" Location="either">
+              <CreateFolder />
+            </Component>
+          </Directory>
+          <Directory Id="configs" Name="Configs">
+            <Component Id="configs" Guid="b7e951d7-8c4c-4ef7-aaa1-f5bf73df109d" SharedDllRefCount="no" KeyPath="no" NeverOverwrite="no" Permanent="no" Transitive="no" Win64="no" Location="either">
+              <CreateFolder />
+            </Component>
+          </Directory>
+          <Directory Id="analysis" Name="ED Analysis">
+            <Component Id="analysis" Guid="0d4cf4b7-f72b-4db5-86e2-880674f4df75" SharedDllRefCount="no" KeyPath="no" NeverOverwrite="no" Permanent="no" Transitive="no" Win64="no" Location="either">
+              <CreateFolder />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <Feature Id="templates" Title="TemplatesFolder" Level="1">
+      <ComponentRef Id="templates" />
+    </Feature>
+    <Feature Id="configs" Title="ConfigsFolder" Level="1">
+      <ComponentRef Id="configs" />
+    </Feature>
+    <Feature Id="analysis" Title="AnalysisFolder" Level="1">
+      <ComponentRef Id="analysis" />
+    </Feature>
+  </Fragment>
+  
+</Wix>
